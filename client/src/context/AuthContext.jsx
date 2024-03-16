@@ -1,5 +1,7 @@
 import { createContext, useState, useContext, useEffect } from "react";
-import { registerRequest, loginRequest } from '../api/auth.js';
+import { registerRequest, loginRequest, verifyTokenRequest } from '../api/auth.js';
+import Cookies from 'js-cookie';
+
 
 export const AuthContext = createContext();
 
@@ -13,8 +15,9 @@ export const useAuth = () => {
 
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
-    const [isAuthenticated, setIsAuthenticated] = useState(false)
-    const [errors, setErrors] = useState([])
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const [errors, setErrors] = useState([]);
+    const [loading, setLoading] = useState(true)
 
     const signup = async (user) => {
         try {
@@ -31,25 +34,59 @@ export const AuthProvider = ({ children }) => {
         try {
             const res = await loginRequest(user);
             console.log(res);
+            setIsAuthenticated(true);
+            setUser(res.data);
         } catch (error) {
             if (Array.isArray(error.response.data)) {
-                return setErrors(error.response.data)
+                setErrors(error.response.data);
+            } else {
+                setErrors([error.response.data.message]);
             }
-            setErrors([error.response.data.message])
         }
     };
 
     useEffect(() => {
-        if(errors.length > 0) {
-            const timer = setTimeout(()=>{
-                setErrors([])
-            },5000)
-            return () => clearTimeout(timer)
+        if (errors.length > 0) {
+            const timer = setTimeout(() => {
+                setErrors([]);
+            }, 5000);
+            return () => clearTimeout(timer);
         }
-    }, [errors])
+    }, [errors]);
+
+    useEffect(() => {
+        async function checkLogin() {
+            const token = Cookies.get('token');
+            if (!token) {
+                setIsAuthenticated(false);
+                setUser(null);
+                setLoading(false)
+                return;
+            }
+
+            try {
+                const res = await verifyTokenRequest(token);
+                if (!res.data) {
+                    setIsAuthenticated(false);
+                    setLoading(false)
+                    return
+                } else {
+                    setIsAuthenticated(true);
+                    setUser(res.data);
+                    setLoading(false)
+                }
+            } catch (error) {
+                console.log(error);
+                setIsAuthenticated(false);
+                setUser(null);
+                setLoading(false)
+            }
+        }
+        checkLogin();
+    }, []);
 
     return (
-        <AuthContext.Provider value={{ signup, signin, user, isAuthenticated, errors }}>
+        <AuthContext.Provider value={{ signup, signin, loading, user, isAuthenticated, errors }}>
             {children}
         </AuthContext.Provider>
     );
