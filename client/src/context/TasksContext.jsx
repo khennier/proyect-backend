@@ -39,14 +39,14 @@ export function TaskProvider({ children }) {
 
     const getTask = async (id) => {
         try {
-            const res = await getTaskRequest(id)
-            console.log(res);
-            return res.data
+            const res = await getTaskRequest(id);
+            return res.data;
         } catch (error) {
-            console.log(error);
+            console.error('Error fetching task:', error);
+            throw error; // Lanzar el error nuevamente para que el componente que llama pueda manejarlo
         }
-
     }
+    
     const updateTask = async (id, task) => {
         try {
             await updateTasksRequest(id, task)

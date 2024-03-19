@@ -16,12 +16,13 @@ function TaskFormPage() {
           const task = await getTask(params.id);
           setValue('title', task.title);
           setValue('description', task.description);
+          console.log(params.id);
         } catch (error) {
           console.error('Error fetching task:', error);
         }
       }
     }
-
+  
     loadTask();
   }, [params.id, getTask, setValue]);
 
