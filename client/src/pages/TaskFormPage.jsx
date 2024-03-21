@@ -10,9 +10,12 @@ function TaskFormPage() {
   const params = useParams();
 
   useEffect(() => {
+    console.log("toy aca");
     async function loadTask() {
+      console.log("segundo toy aca");
       if (params.id) {
         try {
+          console.log("entre a el trycath");
           const task = await getTask(params.id);
           setValue('title', task.title);
           setValue('description', task.description);

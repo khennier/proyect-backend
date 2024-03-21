@@ -45,7 +45,7 @@ export function TaskProvider({ children }) {
             return res.data;
         } catch (error) {
             console.error('Error fetching task:', error);
-            throw error; // Lanzar el error nuevamente para que el componente que llama pueda manejarlo
+            throw error;
         }
     }
     
@@ -56,6 +56,7 @@ export function TaskProvider({ children }) {
             console.log(error);
         }
     }
+        {children}
 
     return (
         <TaskContext.Provider value={{
@@ -66,7 +67,8 @@ export function TaskProvider({ children }) {
             getTask,
             updateTask
         }}>
-            {children}
+        {children}
+            
         </TaskContext.Provider>
     );
 }
