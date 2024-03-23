@@ -11,7 +11,7 @@ function TaskCard({ task }) {
         <div className="flex justify-end mt-2">
           <button onClick={() => {
             deleteTask(task._id);
-          }}className="bg-red-500 hover:bg-red-600 text-white font-bold py-0.5 px-1 rounded mr-2 text-sm">Delet</button>
+          }}className="bg-red-500 hover:bg-red-600 text-white font-bold py-0.5 px-1 rounded mr-2 text-sm">Delete</button>
           <Link to={`/tasks/${task._id}`} className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-0.5 px-1 rounded text-sm">Edit</Link>
         </div>
         <p className="text-gray-500 text-xs mt-2">

@@ -29,19 +29,18 @@ export function TaskProvider({ children }) {
 
     const createTasks = async (task) => {
     const res = await createTasksRequest(task)
-    console.log(res);
+    return res
     }
 
     const deleteTask = async (id) => {
         const res = await deleteTasksRequest(id)
-        console.log(res);
+        return res
 
     }
 
     const getTask = async (id) => {
         try {
             const res = await getTaskRequest(id);
-            console.log(res);
             return res.data;
         } catch (error) {
             console.error('Error fetching task:', error);
